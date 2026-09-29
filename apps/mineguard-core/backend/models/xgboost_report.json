@@ -1,0 +1,27 @@
+{
+  "macro_f1": 0.82,
+  "weighted_f1": 0.91,
+  "training_rows": 20000,
+  "test_rows": 4000,
+  "note": "synthetic dev artifact \u2014 not field data",
+  "feature_cols": [
+    "tilt_x_deg",
+    "tilt_y_deg",
+    "tilt_mag_mrad",
+    "crack_mm",
+    "strain_ustrain",
+    "vib_rms_g",
+    "vib_peak_g",
+    "dom_freq_hz",
+    "band_energy_0_10",
+    "band_energy_10_50",
+    "temp_c",
+    "depth_m",
+    "seam_thk_m",
+    "blast_flag",
+    "rain_flag",
+    "vehicle_flag",
+    "band_ratio_0_10",
+    "extraction_ratio"
+  ]
+}

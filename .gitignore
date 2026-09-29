@@ -1,0 +1,17 @@
+node_modules/
+.env
+venv/
+__pycache__/
+*.joblib
+.DS_Store
+*.tif
+*.arrow
+*.7z
+data/datasets/
+*.db
+*.db-shm
+*.db-wal
+firebase-credentials.json
+# Runtime artifacts — never commit
+request_debug_log.txt
+*.log

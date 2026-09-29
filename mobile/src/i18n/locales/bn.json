@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "ড্যাশবোর্ড",
+    "map": "লাইভ খনি মানচিত্র",
+    "digital_twin": "ডিজিটাল টুইন",
+    "sensors": "সেন্সর",
+    "workers": "কর্মী",
+    "prediction": "ঝুঁকি পূর্বাভাস",
+    "alerts": "সতর্কতা",
+    "evacuation": "সরিয়ে নেওয়া",
+    "broadcasts": "সম্প্রচার",
+    "reports": "রিপোর্ট",
+    "settings": "সেটিংস"
+  },
+  "nav_sections": {
+    "operations": "পরিচালনা",
+    "monitoring": "পর্যবেক্ষণ",
+    "intelligence": "ইন্টেলিজেন্স",
+    "safety": "নিরাপত্তা",
+    "system": "সিস্টেম"
+  },
+  "common": {
+    "live": "লাইভ (LIVE)",
+    "simulated": "সিমুলেটেড (SIMULATED)",
+    "emergency_dispatch": "জরুরি প্রেরণ",
+    "export_csv": "CSV এক্সপোর্ট",
+    "save": "সংরক্ষণ",
+    "cancel": "বাতিল",
+    "loading": "লোড হচ্ছে...",
+    "error": "ত্রুটি"
+  },
+  "alerts": {
+    "evacuate": "সরিয়ে নিন (EVACUATE)",
+    "critical": "গুরুতর (CRITICAL)",
+    "danger": "বিপদ (DANGER)",
+    "caution": "সতর্কতা (CAUTION)",
+    "watch": "পর্যবেক্ষণ (WATCH)",
+    "normal": "স্বাভাবিক (NORMAL)"
+  },
+  "dashboard": {
+    "title": "খনি অবস্থা সারসংক্ষেপ",
+    "active_sensors": "সক্রিয় সেন্সর",
+    "workers_underground": "ভূগর্ভস্থ কর্মী",
+    "risk_level": "ঝুঁকির মাত্রা",
+    "recent_alerts": "সাম্প্রতিক সতর্কতা",
+    "mine_name_sector": "ঝারিয়া কোলিয়ারি • সেক্টর ০৭",
+    "status_critical": "গুরুতর ঘটনা সক্রিয়",
+    "status_warning": "সতর্কতা অবস্থা",
+    "status_normal": "পরিচালন অবস্থা স্বাভাবিক",
+    "critical_msg": "জোন B-তে অস্বাভাবিক ভূ-স্তর অভিসরণ শনাক্ত। ৭ জন খনি শ্রমিক নিকটে; অগ্রাধিকার সরিয়ে নেওয়া প্রয়োজন।",
+    "normal_msg": "সব পর্যবেক্ষিত খাত স্বাভাবিক প্রকৌশল সুরক্ষা সীমার মধ্যে পরিচালিত।"
+  }
+}

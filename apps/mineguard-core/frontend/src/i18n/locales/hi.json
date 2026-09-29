@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "map": "लाइव खान मानचित्र",
+    "digital_twin": "डिजिटल ट्विन",
+    "sensors": "सेंसर",
+    "workers": "कर्मकर्ता",
+    "prediction": "जोखिम भविष्यवाणी",
+    "alerts": "चेतावनी",
+    "evacuation": "निकासी",
+    "broadcasts": "प्रसारण",
+    "reports": "रिपोर्ट्स",
+    "settings": "सेटिंग्स"
+  },
+  "nav_sections": {
+    "operations": "संचालन",
+    "monitoring": "निगरानी",
+    "intelligence": "इंटेलिजेंस",
+    "safety": "सुरक्षा",
+    "system": "सिस्टम"
+  },
+  "common": {
+    "live": "लाइव (LIVE)",
+    "simulated": "सिमुलेटेड (SIMULATED)",
+    "emergency_dispatch": "आपातकालीन प्रेषण",
+    "export_csv": "CSV निर्यात",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि"
+  },
+  "alerts": {
+    "evacuate": "निकासी करें (EVACUATE)",
+    "critical": "गंभीर (CRITICAL)",
+    "danger": "खतरा (DANGER)",
+    "caution": "सावधानी (CAUTION)",
+    "watch": "निगरानी (WATCH)",
+    "normal": "सामान्य (NORMAL)"
+  },
+  "dashboard": {
+    "title": "खान स्थिति अवलोकन",
+    "active_sensors": "सक्रिय सेंसर",
+    "workers_underground": "भूमिगत कर्मकर्ता",
+    "risk_level": "जोखिम स्तर",
+    "recent_alerts": "हाल की चेतावनी",
+    "mine_name_sector": "झरिया कोलियरी • सेक्टर 07",
+    "status_critical": "गंभीर घटना सक्रिय",
+    "status_warning": "चेतावनी स्थिति",
+    "status_normal": "परिचालन स्थिति सामान्य",
+    "critical_msg": "क्षेत्र B में असामान्य भू-स्तर अभिसरण पाया गया। 7 खनिक समीपस्थ हैं, प्राथमिक निकासी आवश्यक।",
+    "normal_msg": "सभी निगरानी क्षेत्र नाममात्र इंजीनियरिंग सुरक्षा सीमा में संचालित हैं।"
+  }
+}

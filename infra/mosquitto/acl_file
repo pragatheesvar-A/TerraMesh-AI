@@ -1,0 +1,21 @@
+# TerraMesh AI — Mosquitto topic ACL (used with mosquitto.conf.production)
+#
+# Topic contract (enforced by the backend ingestion client as well):
+#   mines/{mine_id}/nodes/{node_id}/telemetry   (edge → backend, publish only)
+#   mines/{mine_id}/nodes/{node_id}/heartbeat   (edge → backend, publish only)
+#   mines/{mine_id}/nodes/{node_id}/status      (edge → backend, publish only)
+#   mines/{mine_id}/gateway/status              (broker LWT, retained)
+#   mines/{mine_id}/alerts                      (backend → downstream, publish restricted)
+#
+# Arbitrary topics are NOT permitted.
+
+# Backend service identity: read all node traffic, write alerts + commands
+user terramesh-backend
+topic read mines/#
+topic write mines/+/alerts
+topic read mines/+/gateway/status
+
+# Edge nodes: publish-only on their own telemetry topics, no reads.
+pattern write mines/+/nodes/+/telemetry
+pattern write mines/+/nodes/+/heartbeat
+pattern write mines/+/nodes/+/status

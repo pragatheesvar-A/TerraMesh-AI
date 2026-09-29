@@ -1,0 +1,21 @@
+﻿{
+  "name": "TerraMesh AI - Mine Safety Command Center",
+  "short_name": "TerraMesh AI",
+  "description": "Operational mine-safety and subsidence-monitoring platform: live telemetry, risk prediction, alerts, evacuation and worker safety.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070b12",
+  "theme_color": "#070b12",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "shortcuts": [
+    { "name": "Overview", "url": "/" },
+    { "name": "Live Mine Map", "url": "/?tab=map" },
+    { "name": "Alerts", "url": "/?tab=alerts" }
+  ]
+}

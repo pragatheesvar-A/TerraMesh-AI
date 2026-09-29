@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "டாஷ்போர்டு",
+    "map": "நேரடி சுரங்க வரைபடம்",
+    "digital_twin": "டிஜிட்டல் ட்வின்",
+    "sensors": "சென்சார்கள்",
+    "workers": "தொழிலாளர்கள்",
+    "prediction": "இடர் கணிப்பு",
+    "alerts": "எச்சரிக்கைகள்",
+    "evacuation": "வெளியேற்றம்",
+    "broadcasts": "ஒலிபரப்புகள்",
+    "reports": "அறிக்கைகள்",
+    "settings": "அமைப்புகள்"
+  },
+  "nav_sections": {
+    "operations": "செயல்பாடு",
+    "monitoring": "கண்காணிப்பு",
+    "intelligence": "நுண்ணறிவு",
+    "safety": "பாதுகாப்பு",
+    "system": "அமைப்பு"
+  },
+  "common": {
+    "live": "நேரடி (LIVE)",
+    "simulated": "உருவகம் (SIMULATED)",
+    "emergency_dispatch": "அவசர அனுப்புதல்",
+    "export_csv": "CSV ஏற்றுமதி",
+    "save": "சேமி",
+    "cancel": "ரத்து",
+    "loading": "ஏற்றப்படுகிறது...",
+    "error": "பிழை"
+  },
+  "alerts": {
+    "evacuate": "வெளியேறு (EVACUATE)",
+    "critical": "முக்கியம் (CRITICAL)",
+    "danger": "ஆபத்து (DANGER)",
+    "caution": "எச்சரிக்கை (CAUTION)",
+    "watch": "கண்காணிப்பு (WATCH)",
+    "normal": "இயல்பானது (NORMAL)"
+  },
+  "dashboard": {
+    "title": "சுரங்க நிலை மேலோட்டம்",
+    "active_sensors": "செயலில் உள்ள சென்சார்கள்",
+    "workers_underground": "நிலத்தடி தொழிலாளர்கள்",
+    "risk_level": "இடர் நிலை",
+    "recent_alerts": "சமீபத்திய எச்சரிக்கைகள்",
+    "mine_name_sector": "ஜாரியா கொலியரி • பகுதி 07",
+    "status_critical": "முக்கிய சம்பவம் செயலில்",
+    "status_warning": "எச்சரிக்கை நிலை",
+    "status_normal": "இயக்க நிலை சாதாரணம்",
+    "critical_msg": "மண்டலம் B-இல் அசாதாரண நில அடுக்கு சுருக்கம் கண்டறியப்பட்டது. 7 தொழிலாளர்கள் அருகில்; முன்னுரிமை வெளியேற்றம் தேவை.",
+    "normal_msg": "கண்காணிக்கப்படும் அனைத்து மண்டலங்களும் சாதாரண பொறியியல் பாதுகாப்பு வரம்பிற்குள் இயங்குகின்றன."
+  }
+}

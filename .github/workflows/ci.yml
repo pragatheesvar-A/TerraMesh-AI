@@ -1,0 +1,130 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    name: Backend — install, validate, test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mineguard-core/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"   # matches the container image; catches
+                                    # 3.11-vs-3.12 f-string regressions
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Bytecode-compile every module (catches syntax drift)
+        run: python -m compileall -q .
+
+      - name: Import validation (every service module)
+        run: |
+          python -c "import main, spatial, geotechnical, environmental, \
+                      microseismic, audit_service, auth, worker_location; \
+                      print('imports OK')"
+
+      - name: Unit + honesty tests (no infra required)
+        run: python -m pytest tests/ -q --ignore=tests/test_e2e_live.py --ignore=tests/test_database.py
+
+      - name: Edge model contract validation
+        run: |
+          python generate_edge_contract.py
+          python validate_edge_contract.py
+
+      - name: i18n parity check (5 locales, no silent fallbacks)
+        run: python ../../scripts/check_i18n_parity.py
+
+      - name: Alembic migration validation (fresh PostgreSQL service)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/terramesh_ci
+        run: |
+          alembic upgrade head
+          alembic downgrade base
+          alembic upgrade head
+
+      - name: Seeded-DB integration suite (zones/spatial/RBAC/failure-matrix)
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/terramesh_ci
+          ENVIRONMENT: test_db
+        run: |
+          python seed_spatial.py || true
+          python -m pytest tests/test_gis_closure.py tests/test_rbac.py tests/test_failure_matrix.py -q
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: terramesh_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+
+  frontend:
+    name: Frontend — install, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mineguard-core/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: apps/mineguard-core/frontend/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Build
+        run: npm run build
+
+  compose-and-security:
+    name: Compose config + secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose file
+        env:
+          POSTGRES_PASSWORD: ci_placeholder_password
+          SECRET_KEY: ci_placeholder_secret
+        run: docker compose config --quiet
+
+      - name: Fail on hardcoded secrets in tracked files
+        shell: bash
+        run: |
+          patterns=(
+            "CVgiuSQZ"          # old SMSGate credential (removed)
+            "192.168.137.89"    # old hardcoded LAN gateway
+          )
+          fail=0
+          for p in "${patterns[@]}"; do
+            if grep -rq "$p" --include='*.py' --include='*.jsx' --include='*.js' --include='*.json' \
+                 --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist apps infra 2>/dev/null; then
+              echo "ERROR: hardcoded secret/endpoint '$p' found in tracked sources"
+              fail=1
+            fi
+          done
+          if git ls-files | grep -E '(^|/)\.env$'; then
+            echo "ERROR: a real .env file is tracked in git"
+            fail=1
+          fi
+          exit $fail
+
+  # NOTE: No auto-deploy. Deployment is a manual, explicitly configured step.
+  # The workflow has NOT yet executed on a hosted runner — classification:
+  # AUTHORED — NOT RUN (per docs/FINAL_GAP_CLOSURE_AUDIT.md).

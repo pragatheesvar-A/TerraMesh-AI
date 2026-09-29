@@ -1,0 +1,262 @@
+{
+  "contract_version": "1.0.0",
+  "generated_at": "2026-09-25T06:06:38.609599+00:00",
+  "honest_status": "REFERENCE CONTRACT for edge deployment readiness. The trained artifacts are NOT quantized for MCU deployment; a production TinyML build must be exported FROM this contract and re-validated.",
+  "models": {
+    "xgboost_risk": {
+      "artifact": "models\\xgboost_risk.joblib",
+      "sha256": "d7db2fae1db4139bbe3f4550ea9c9dff035412d316d74c74264f304c839cad4f",
+      "size_bytes": 4004226,
+      "training_metrics": {
+        "macro_f1": 0.7808,
+        "weighted_f1": 0.9645,
+        "note": "SYNTHETIC training-corpus holdout (see synth/); no field data was used"
+      }
+    },
+    "isolation_forest": {
+      "artifact": "models\\isolation_forest.joblib",
+      "sha256": "84111b549bb0da7a727a01283aafbf531f8fba811c11eb7cfa54c4faa7e97981",
+      "size_bytes": 2142546
+    },
+    "terramesh_final": {
+      "artifact": "models\\terramesh_final_model.joblib",
+      "sha256": "2491baed88d22e09644d8ec7a775f75652e1d7e94c1bbb93d2dbecef96b59665",
+      "size_bytes": 8444326
+    }
+  },
+  "feature_order": [
+    "tilt_x_deg",
+    "tilt_y_deg",
+    "tilt_mag_mrad",
+    "crack_mm",
+    "strain_ustrain",
+    "vib_rms_g",
+    "vib_peak_g",
+    "dom_freq_hz",
+    "band_energy_0_10",
+    "band_energy_10_50",
+    "temp_c",
+    "depth_m",
+    "seam_thk_m",
+    "blast_flag",
+    "rain_flag",
+    "vehicle_flag",
+    "band_ratio_0_10",
+    "extraction_ratio"
+  ],
+  "quantization_ranges": {
+    "tilt_x_deg": [
+      -10.0,
+      10.0
+    ],
+    "tilt_y_deg": [
+      -10.0,
+      10.0
+    ],
+    "tilt_mag_mrad": [
+      0.0,
+      174.5
+    ],
+    "crack_mm": [
+      0.0,
+      200.0
+    ],
+    "strain_ustrain": [
+      0.0,
+      5000.0
+    ],
+    "vib_rms_g": [
+      0.0,
+      8.0
+    ],
+    "vib_peak_g": [
+      0.0,
+      16.0
+    ],
+    "dom_freq_hz": [
+      0.0,
+      120.0
+    ],
+    "band_energy_0_10": [
+      0.0,
+      1.0
+    ],
+    "band_energy_10_50": [
+      0.0,
+      1.0
+    ],
+    "temp_c": [
+      -10.0,
+      85.0
+    ],
+    "depth_m": [
+      0.0,
+      600.0
+    ],
+    "seam_thk_m": [
+      0.5,
+      10.0
+    ],
+    "blast_flag": [
+      0,
+      1
+    ],
+    "rain_flag": [
+      0,
+      1
+    ],
+    "vehicle_flag": [
+      0,
+      1
+    ],
+    "band_ratio_0_10": [
+      0.0,
+      1.0
+    ],
+    "extraction_ratio": [
+      0.0,
+      1.0
+    ]
+  },
+  "input_tensor": {
+    "shape": [
+      1,
+      18
+    ],
+    "dtype": "float32",
+    "features": [
+      "tilt_x_deg",
+      "tilt_y_deg",
+      "tilt_mag_mrad",
+      "crack_mm",
+      "strain_ustrain",
+      "vib_rms_g",
+      "vib_peak_g",
+      "dom_freq_hz",
+      "band_energy_0_10",
+      "band_energy_10_50",
+      "temp_c",
+      "depth_m",
+      "seam_thk_m",
+      "blast_flag",
+      "rain_flag",
+      "vehicle_flag",
+      "band_ratio_0_10",
+      "extraction_ratio"
+    ]
+  },
+  "output_tensor": {
+    "shape": [
+      1,
+      5
+    ],
+    "dtype": "float32",
+    "labels": [
+      "0:NORMAL",
+      "1:WATCH",
+      "2:WARNING",
+      "3:CRITICAL",
+      "4:EMERGENCY"
+    ],
+    "semantics": "softmax class probabilities; index 0..4 = NORMAL..EMERGENCY"
+  },
+  "isolation_forest": {
+    "features": [
+      "tilt_x_deg",
+      "tilt_y_deg",
+      "tilt_mag_mrad",
+      "crack_mm",
+      "strain_ustrain",
+      "vib_rms_g",
+      "vib_peak_g",
+      "dom_freq_hz",
+      "band_energy_0_10",
+      "band_energy_10_50"
+    ],
+    "anomaly_threshold": 0.5040197904341823,
+    "score_semantics": "higher = more anomalous; compare against anomaly_threshold",
+    "trained_note": "contamination=0.03, roc_auc=0.9904 (SYNTHETIC corpus holdout)"
+  },
+  "inference_result_schema": {
+    "risk_class": "int 0-4",
+    "risk_label": "one of ['0:NORMAL', '1:WATCH', '2:WARNING', '3:CRITICAL', '4:EMERGENCY']",
+    "class_probabilities": "float[5] summing to ~1.0",
+    "confidence": "max(class_probabilities)",
+    "anomaly_score": "float or null when the anomaly model is absent",
+    "inference_mode": "ml_model | physics_fallback",
+    "provenance": "MODEL OUTPUT"
+  },
+  "fallback_inference": {
+    "definition": "Uniform probability vector [0.2]*5 \u2014 explicitly NOT a fabricated 'all normal' vector; every result is labelled model_loaded=false / inference_mode=physics_fallback",
+    "reference": "backend/edge_ingest_loop.py (degraded mode)"
+  },
+  "target_envelope": {
+    "cpu": "dual-core 240 MHz (ESP32-S3 class) \u2014 full classifier is SERVER-SIDE; on-node runs the fixed-point threshold reference (see edge/firmware)",
+    "ram": ">= 512 KB SRAM for feature window buffers",
+    "sampling": "200 Hz burst x 0.5 s window for vibration; 1 Hz for tilt/crack/strain; duty-cycled by solar state",
+    "latency_budget_ms": 5000
+  },
+  "telemetry_compatibility": {
+    "wire_schema": "backend/edge_schemas.NodeTelemetry",
+    "mqtt_payload": "JSON matching NodeTelemetry; packet_seq enables QoS-1 dedup; timestamp ISO-8601",
+    "superset_fields_covering_features": [
+      "tilt_x_deg",
+      "tilt_y_deg",
+      "tilt_mag_mrad",
+      "crack_gap_mm",
+      "strain_ustrain",
+      "vib_rms_g",
+      "vib_peak_g",
+      "dom_freq_hz",
+      "band_energy_0_10",
+      "band_energy_10_50",
+      "temp_c",
+      "blast_flag",
+      "rain_flag",
+      "vehicle_flag"
+    ],
+    "wire_to_model_aliases": {
+      "crack_mm": "crack_gap_mm"
+    },
+    "derived_features_required_on_gateway_or_server": [
+      "band_ratio_0_10",
+      "extraction_ratio",
+      "depth_m",
+      "seam_thk_m"
+    ]
+  },
+  "xgboost_top_features": [
+    [
+      "band_ratio_0_10",
+      0.638
+    ],
+    [
+      "tilt_mag_mrad",
+      0.1077
+    ],
+    [
+      "dom_freq_hz",
+      0.054
+    ],
+    [
+      "vib_peak_g",
+      0.0324
+    ],
+    [
+      "vib_rms_g",
+      0.0249
+    ],
+    [
+      "depth_m",
+      0.0222
+    ],
+    [
+      "band_energy_10_50",
+      0.0209
+    ],
+    [
+      "blast_flag",
+      0.0194
+    ]
+  ]
+}

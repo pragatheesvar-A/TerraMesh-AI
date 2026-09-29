@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "ᱰᱮᱥᱵᱚᱰᱰ",
+    "map": "ᱢᱟᱭᱱ ᱢᱮᱯ",
+    "digital_twin": "ᱰᱤᱡᱤᱴᱟᱞ ᱴᱣᱤᱱ",
+    "sensors": "ᱥᱮᱱᱥᱚᱨ",
+    "workers": "ᱠᱟᱹᱢᱤᱭᱟᱹ",
+    "prediction": "ᱨᱤᱥᱠ ᱯᱨᱮᱰᱤᱠᱥᱚᱱ",
+    "alerts": "ᱮᱞᱟᱨᱴ",
+    "evacuation": "ᱚᱫᱚᱲ ᱚᱰᱚᱱ",
+    "broadcasts": "ᱵᱨᱚᱰᱠᱟᱥᱴ",
+    "reports": "ᱨᱤᱯᱚᱨᱴ",
+    "settings": "ᱥᱮᱴᱤᱝ"
+  },
+  "nav_sections": {
+    "operations": "ᱚᱯᱮᱨᱮᱥᱚᱱ",
+    "monitoring": "ᱢᱚᱱᱤᱴᱚᱨᱤᱝ",
+    "intelligence": "ᱤᱱᱴᱮᱞᱤᱡᱮᱱᱥ",
+    "safety": "ᱥᱤᱠᱷᱤᱛ",
+    "system": "ᱥᱤᱥᱴᱮᱢ"
+  },
+  "common": {
+    "live": "ᱞᱟᱭᱤᱵᱽ (LIVE)",
+    "simulated": "ᱥᱤᱢᱩᱞᱮᱴᱮᱰ (SIMULATED)",
+    "emergency_dispatch": "ᱤᱢᱟᱨᱡᱮᱱᱥᱤ ᱰᱤᱥᱯᱮᱪ",
+    "export_csv": "CSV ᱮᱠᱥᱯᱚᱨᱴ",
+    "save": "ᱥᱟᱹᱵ",
+    "cancel": "ᱵᱟᱹᱰ",
+    "loading": "ᱞᱚᱰ ᱦᱩᱭᱩᱜ ᱠᱟᱱᱟ...",
+    "error": "ᱵᱷᱩᱞ"
+  },
+  "alerts": {
+    "evacuate": "ᱚᱫᱚᱲ ᱚᱰᱚᱱ (EVACUATE)",
+    "critical": "ᱟᱹᱰᱤ ᱵᱚᱫᱽ (CRITICAL)",
+    "danger": "ᱵᱤᱯᱚᱛᱤ (DANGER)",
+    "caution": "ᱦᱩᱥᱤᱭᱟᱹᱨ (CAUTION)",
+    "watch": "ᱧᱮᱞ ᱫᱚᱦᱚ (WATCH)",
+    "normal": "ᱥᱟᱫᱷᱟᱨᱚᱱ (NORMAL)"
+  },
+  "dashboard": {
+    "title": "ᱢᱟᱭᱱ ᱥᱴᱮᱴᱟᱥ ᱳᱵᱷᱟᱨᱵᱷᱤᱭᱩ",
+    "active_sensors": "ᱮᱠᱴᱤᱵᱽ ᱥᱮᱱᱥᱚᱨ",
+    "workers_underground": "ᱚᱲᱤ ᱠᱟᱹᱢᱤᱭᱟᱹ",
+    "risk_level": "ᱨᱤᱥᱠ ᱞᱮᱵᱷᱮᱞ",
+    "recent_alerts": "ᱱᱟᱶᱟ ᱮᱞᱟᱨᱴ",
+    "mine_name_sector": "ᱡᱷᱟᱨᱤᱭᱟ ᱠᱳᱞᱤᱭᱟᱨᱤ • ᱥᱮᱠᱴᱚᱨ 07",
+    "status_critical": "ᱜᱚᱢᱵᱷᱤᱨ ᱜᱷᱚᱴᱚᱱᱟ ᱪᱟᱹᱞᱩ ᱢᱮᱱᱟᱜᱼᱟ (Critical Incident Active)",
+    "status_warning": "ᱦᱩᱥᱤᱭᱟᱹᱨ ᱦᱟᱞᱟᱚᱛ ᱢᱮᱱᱟᱜᱼᱟ (Warning Condition)",
+    "status_normal": "ᱠᱟᱹᱢᱤ ᱦᱟᱞᱟᱚᱛ ᱥᱟᱫᱷᱟᱨᱚᱱ ᱜᱮᱭᱟ (Operational Status Normal)",
+    "critical_msg": "ᱡᱳᱱ B ᱨᱮ ᱚᱥᱟᱹᱨᱤ ᱫᱷᱟᱹᱨᱛᱤ ᱥᱴᱨᱟᱴᱟ ᱠᱚᱱᱵᱷᱚᱨᱡᱮᱱᱥ ᱧᱟᱢ ᱟᱠᱟᱱᱟ᱾ ᱗ ᱠᱷᱟᱹᱫᱤᱭᱟᱹ ᱥᱩᱨ ᱨᱮ ᱢᱮᱱᱟᱜ ᱠᱚᱣᱟ, ᱯᱩᱭᱞᱤ ᱚᱫᱚᱲ ᱚᱰᱚᱱ ᱞᱟᱹᱠᱛᱤ ᱠᱟᱱᱟ᱾",
+    "normal_msg": "ᱥᱟᱱᱟᱢ ᱧᱮᱞᱡᱚᱠᱷ ᱠᱷᱚᱱᱰ ᱤᱱᱡᱤᱱᱤᱭᱟᱨᱤᱝ ᱥᱤᱠᱷᱤᱛ ᱥᱤᱢᱟ ᱵᱷᱤᱛᱨᱤ ᱨᱮ ᱠᱟᱹᱢᱤ ᱠᱟᱱᱟ᱾"
+  }
+}

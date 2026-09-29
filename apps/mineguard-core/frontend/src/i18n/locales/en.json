@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "map": "Live Mine Map",
+    "digital_twin": "Digital Twin",
+    "sensors": "Sensors",
+    "workers": "Workers",
+    "prediction": "Risk Prediction",
+    "alerts": "Alerts",
+    "evacuation": "Evacuation",
+    "broadcasts": "Broadcasts",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "nav_sections": {
+    "operations": "Operations",
+    "monitoring": "Monitoring",
+    "intelligence": "Intelligence",
+    "safety": "Safety",
+    "system": "System"
+  },
+  "common": {
+    "live": "LIVE",
+    "simulated": "SIMULATED",
+    "emergency_dispatch": "Emergency Dispatch",
+    "export_csv": "Export CSV",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Error"
+  },
+  "alerts": {
+    "evacuate": "EVACUATE",
+    "critical": "CRITICAL",
+    "danger": "DANGER",
+    "caution": "CAUTION",
+    "watch": "WATCH",
+    "normal": "NORMAL"
+  },
+  "dashboard": {
+    "title": "Mine Status Overview",
+    "active_sensors": "Active Sensors",
+    "workers_underground": "Workers Underground",
+    "risk_level": "Risk Level",
+    "recent_alerts": "Recent Alerts",
+    "mine_name_sector": "Jharia Colliery • Sector 07",
+    "status_critical": "Critical Incident Active",
+    "status_warning": "Warning Condition",
+    "status_normal": "Operational Status Normal",
+    "critical_msg": "Abnormal ground strata convergence detected in Zone B. 7 miners in proximity requiring priority clearance.",
+    "normal_msg": "All monitored sectors operating within nominal engineering safety thresholds."
+  }
+}

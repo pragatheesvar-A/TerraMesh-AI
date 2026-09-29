@@ -1,0 +1,17 @@
+{
+  "anomaly_threshold": 0.65,
+  "features": [
+    "tilt_x_deg",
+    "tilt_y_deg",
+    "tilt_mag_mrad",
+    "crack_mm",
+    "strain_ustrain",
+    "vib_rms_g",
+    "vib_peak_g",
+    "dom_freq_hz",
+    "band_energy_0_10",
+    "band_energy_10_50"
+  ],
+  "training_rows": 5225,
+  "note": "synthetic dev artifact"
+}

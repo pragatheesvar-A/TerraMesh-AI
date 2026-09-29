@@ -1,0 +1,41 @@
+# TerraMesh AI — Mosquitto MQTT broker configuration (PRODUCTION POSTURE)
+#
+# Copy to /mosquitto/config/mosquitto.conf on the broker host and generate the
+# password file before starting:
+#
+#   docker exec terramesh-mosquitto mosquitto_passwd -c -b /mosquitto/config/passwd \
+#        terramesh-backend '<STRONG_PASSWORD>'
+#   # repeat -b (without -c) for every edge node identity
+#
+# TLS: mount CA + server cert/key and uncomment the TLS block. Edge devices
+# must then connect with the CA (and optionally client certs).
+
+per_listener_settings true
+
+# ── Secure MQTT listener ─────────────────────────────────────────────────────
+listener 8883
+protocol mqtt
+allow_anonymous false
+password_file /mosquitto/config/passwd
+acl_file /mosquitto/config/acl_file
+max_connections 500
+max_keepalive 120
+
+# ── TLS (uncomment after provisioning certificates) ─────────────────────────
+# cafile /mosquitto/certs/ca.crt
+# certfile /mosquitto/certs/server.crt
+# keyfile /mosquitto/certs/server.key
+# tls_version tlsv1.2
+
+# ── Persistence & logging ────────────────────────────────────────────────────
+persistence true
+persistence_location /mosquitto/data/
+autosave_interval 30
+
+log_dest stdout
+log_type error
+log_type warning
+log_type notice
+log_type information
+log_type subscribe
+log_type unsubscribe

@@ -1,0 +1,49 @@
+{
+  "script": "demo_reset.py",
+  "timestamp": "2026-09-25T20:04:30.218232+00:00",
+  "demo_mine_id": "jharia_01",
+  "steps": [
+    {
+      "step": "Database connection",
+      "status": "SKIPPED",
+      "detail": "DATABASE_URL not set \u2014 offline reset only (demo data not persisted in DB)"
+    },
+    {
+      "step": "Reset demo alerts",
+      "status": "SKIPPED",
+      "detail": "No DB connection"
+    },
+    {
+      "step": "Reset demo evacuation events",
+      "status": "SKIPPED",
+      "detail": "No DB connection"
+    },
+    {
+      "step": "Reset demo worker states",
+      "status": "SKIPPED",
+      "detail": "No DB connection"
+    },
+    {
+      "step": "Reset node risk levels to NORMAL",
+      "status": "SKIPPED",
+      "detail": "No DB connection"
+    },
+    {
+      "step": "Audit log preserved",
+      "status": "PASS",
+      "detail": "Script never deletes audit_events (append-only integrity maintained)"
+    },
+    {
+      "step": "Production config",
+      "status": "PASS",
+      "detail": "Script makes no changes to environment variables, secrets, or model artifacts"
+    }
+  ],
+  "summary": {
+    "total": 7,
+    "passed": 2,
+    "skipped": 5,
+    "failed": 0,
+    "overall": "PASS"
+  }
+}

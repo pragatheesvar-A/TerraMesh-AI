@@ -1,0 +1,148 @@
+# TerraMesh AI — full application stack
+#
+# Infrastructure services (postgres / redis / mosquitto) are bound to the
+# host loopback only — they are NOT exposed to external networks. The
+# frontend container is the single public entrypoint (SPA + reverse proxy).
+#
+# First run:
+#   1. cp apps/mineguard-core/backend/.env.example apps/mineguard-core/backend/.env  (edit secrets)
+#   2. docker compose up -d postgres redis mosquitto
+#   3. docker compose run --rm backend alembic upgrade head   (creates schema + hypertable)
+#   4. docker compose up -d backend frontend
+#
+# PostgreSQL uses the timescale/timescaledb-ha:pg16 image (TimescaleDB +
+# PostGIS included). Never use SQLite in the container path.
+
+services:
+
+  # ─── PostgreSQL 16 + TimescaleDB + PostGIS ─────────────────────────────────
+  postgres:
+    image: timescale/timescaledb-ha:pg16
+    container_name: terramesh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: terramesh
+      POSTGRES_USER: terramesh
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your environment or .env at repo root}
+    ports:
+      - "127.0.0.1:5433:5432"   # loopback only — operator access (5432 used by Supabase)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U terramesh -d terramesh"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - terramesh_net
+
+  # ─── Redis 7 ────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: terramesh-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6379:6379"   # loopback only
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - terramesh_net
+
+  # ─── Mosquitto MQTT Broker ───────────────────────────────────────────────────
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: terramesh-mosquitto
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1883:1883"   # loopback only — backend + local edge nodes
+    volumes:
+      - ./infra/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -t '$$SYS/broker/uptime' -C 1 -W 3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - terramesh_net
+
+  # ─── FastAPI Backend ─────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./apps/mineguard-core/backend
+      dockerfile: Dockerfile
+    container_name: terramesh-backend
+    restart: unless-stopped
+    env_file:
+      - path: ./apps/mineguard-core/backend/.env
+        required: false          # optional: repo-root .env may provide secrets instead
+    environment:
+      DATABASE_URL: postgresql://terramesh:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/terramesh
+      REDIS_URL: redis://redis:6379
+      MQTT_BROKER_HOST: mosquitto
+      MQTT_BROKER_PORT: 1883
+      MINE_ID: jharia_01
+      ENVIRONMENT: production
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost,http://localhost:8080}
+      # Production guard refuses the dev default — supply a real secret
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY (openssl rand -hex 32) in your environment or root .env}
+      # Edge-buffer SQLite must live inside the container's writable /app
+      EDGE_DB_PATH: /app/data/terramesh_edge.db
+    ports:
+      - "127.0.0.1:8000:8000"   # loopback only — direct API/debug access
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - terramesh_net
+
+  # ─── React Frontend (Vite build → Nginx SPA + reverse proxy) ────────────────
+  frontend:
+    build:
+      context: ./apps/mineguard-core/frontend
+      dockerfile: Dockerfile
+      args:
+        # Empty default → the SPA uses same-origin relative URLs, which this
+        # container's nginx proxies to the backend service.
+        VITE_API_BASE: ${VITE_API_BASE:-}
+    container_name: terramesh-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"                  # single public entrypoint
+    depends_on:
+      backend:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - terramesh_net
+
+volumes:
+  postgres_data:
+  redis_data:
+  mosquitto_data:
+  mosquitto_log:
+
+networks:
+  terramesh_net:
+    driver: bridge

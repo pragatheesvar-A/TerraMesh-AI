@@ -1,0 +1,57 @@
+{
+  "release_version": "RC-1",
+  "git_commit": "dec04eeaa3e242b4acc723998110b5536ba27d10",
+  "git_branch": "main",
+  "audit_timestamp": "2026-09-25T20:37:12.461331Z",
+  "classification": "RC-1 DEMONSTRATION READY - FIELD VALIDATION PENDING",
+  "test_suite": {
+    "backend_pytest": {
+      "status": "PASS",
+      "passed": 169,
+      "skipped": 9,
+      "failed": 0,
+      "warnings": 29,
+      "note": "9 skips are hardware/external-dependency gated (correct behaviour)"
+    },
+    "frontend_build": {
+      "status": "VERIFIED",
+      "note": "npm run build clean"
+    },
+    "mobile_build": {
+      "status": "VERIFIED (typecheck)",
+      "note": "Device-runtime NOT executed"
+    },
+    "docker_compose": {
+      "status": "VERIFIED",
+      "note": "config clean"
+    },
+    "security_tests": {
+      "status": "PASS",
+      "note": "RBAC, IDOR, auth verified in pytest"
+    },
+    "ai_governance": {
+      "status": "PASS",
+      "note": "model registry, versioning, provenance verified"
+    }
+  },
+  "blocked_dependencies": {
+    "FCM": "CREDENTIALS_ABSENT",
+    "Twilio_SMS": "CREDENTIALS_ABSENT",
+    "SMTP": "CREDENTIALS_ABSENT",
+    "InSAR_Sentinel": "CREDENTIALS_ABSENT",
+    "InSAR_NISAR": "CREDENTIALS_ABSENT",
+    "LoRa_hardware": "HARDWARE_ABSENT",
+    "ESP32": "HARDWARE_ABSENT",
+    "Raspberry_Pi_gateway": "HARDWARE_ABSENT",
+    "Azure": "NOT_PROVISIONED"
+  },
+  "test_integrity": {
+    "assert_true_found": false,
+    "xfail_found": false,
+    "todo_fixme_found": false,
+    "hardcoded_credentials": false,
+    "debug_endpoints": "NOT_DETECTED"
+  },
+  "field_validation": "PENDING - NO MINE-SITE EVIDENCE EXISTS",
+  "model_accuracy_claim": "NOT QUANTIFIED - no labelled field dataset"
+}

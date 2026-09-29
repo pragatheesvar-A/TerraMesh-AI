@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TerraMesh AI — Mine Subsidence Command Center</title>
+  <meta name="description" content="AI-enabled real-time mine subsidence monitoring, prediction, and early warning system for underground coal mines in India.">
+  
+  <!-- Leaflet GIS Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Custom Dark Mode Styles -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- ======================================================== -->
+  <!-- Top Navigation & Global Safety Status Header              -->
+  <!-- ======================================================== -->
+  <header>
+    <div class="brand-section">
+      <div class="logo-icon">⛏️</div>
+      <div class="brand-title">
+        <h1>TerraMesh AI <span style="font-size: 0.75rem; color: var(--tier-cyan); font-weight: 500;">v2.0 PROD</span></h1>
+        <p>StrataSense Early Warning System · Jharia Colliery Panel A-04</p>
+      </div>
+    </div>
+
+    <div class="system-status-badges">
+      <div class="badge">
+        <span class="badge-pulse" id="gateway-beacon"></span>
+        <span id="gateway-status">GATEWAY: ONLINE</span>
+      </div>
+
+      <div class="badge" style="font-family: var(--font-mono);">
+        <span>📡 LORA IN865</span>
+      </div>
+
+      <div class="badge" id="siren-badge">
+        <span id="siren-icon">🔔</span>
+        <span id="siren-text">SIREN: SILENT</span>
+      </div>
+
+      <div class="master-risk-badge tier-normal" id="master-risk-badge">
+        STATUS: NORMAL
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- SIH Judge Demonstration Rig Bar                           -->
+  <!-- ======================================================== -->
+  <div class="demo-rig-bar">
+    <div class="rig-title">
+      <span>⚡ 1-Click SIH Judge Demonstration Rig:</span>
+    </div>
+
+    <div class="scenario-buttons">
+      <button class="btn-scenario" id="btn-sc-quiet" onclick="triggerScenario('QUIET_BASELINE')">
+        🟢 Quiet Baseline
+      </button>
+      <button class="btn-scenario" id="btn-sc-gradual" onclick="triggerScenario('GRADUAL_SUBSIDENCE')">
+        🟡 Gradual Subsidence
+      </button>
+      <button class="btn-scenario" id="btn-sc-blast" onclick="triggerScenario('BLASTING_VIBRATION')">
+        💥 Blasting (Suppressed)
+      </button>
+      <button class="btn-scenario" id="btn-sc-fault" onclick="triggerScenario('SENSOR_FAULT')">
+        ⚠️ Sensor Fault
+      </button>
+      <button class="btn-scenario" id="btn-sc-crack" onclick="triggerScenario('CRACK_INITIATION')">
+        📏 Crack Opening
+      </button>
+      <button class="btn-scenario" id="btn-sc-realfault" onclick="triggerScenario('REAL_SUBSIDENCE_PLUS_FAULT')">
+        🔴 Real Subsidence + Fault
+      </button>
+      <button class="btn-scenario btn-stop" id="btn-sc-stop" onclick="stopScenario()">
+        ⏹️ Stop
+      </button>
+    </div>
+
+    <div style="font-size: 0.75rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem;">
+      <span>Speed:</span>
+      <select id="playback-speed" style="background: var(--bg-card); color: #fff; border: 1px solid var(--border-subtle); border-radius: 4px; padding: 2px 6px; font-size: 0.75rem;">
+        <option value="2">2x</option>
+        <option value="5" selected>5x</option>
+        <option value="10">10x</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- Main Grid Workspace: GIS Map + Inspector                   -->
+  <!-- ======================================================== -->
+  <div class="main-layout">
+    
+    <!-- Left Column: Leaflet GIS Mining Map -->
+    <div class="gis-panel">
+      <div id="map-view"></div>
+
+      <!-- Map Floating Overlay Information -->
+      <div class="gis-overlay-card">
+        <h4>🗺️ Jharia Coalfield Panel A-04</h4>
+        <p>Surface monitoring mesh: 12 Heltec ESP32-S3 wireless nodes installed over longwall goaf zone.</p>
+        
+        <div style="margin-top: 0.5rem; border-top: 1px solid var(--border-subtle); padding-top: 0.4rem;">
+          <div class="legend-row">
+            <span class="legend-dot" style="background: var(--tier-normal);"></span>
+            <span>Normal (Strain &lt; 0.5 mm/m)</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-dot" style="background: var(--tier-watch);"></span>
+            <span>Watch (Strain 0.5 - 1.5 mm/m)</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-dot" style="background: var(--tier-warning);"></span>
+            <span>Warning (Strain 1.5 - 3.0 mm/m)</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-dot" style="background: var(--tier-critical);"></span>
+            <span>Critical (Strain &gt; 3.0 mm/m)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Live Telemetry & AI Inspection -->
+    <div class="inspector-panel">
+      <!-- Tabs Navigation -->
+      <div class="inspector-tabs">
+        <button class="tab-btn active" onclick="switchTab('xai')">AI Safety Explanation Card</button>
+        <button class="tab-btn" onclick="switchTab('telemetry')">Live Telemetry & Charts</button>
+        <button class="tab-btn" onclick="switchTab('mesh')">Mesh Nodes (<span id="node-count-badge">0</span>)</button>
+      </div>
+
+      <div class="inspector-content">
+
+        <!-- ==================== TAB 1: XAI CARD ==================== -->
+        <div id="tab-xai" class="tab-view">
+          <div class="xai-card" id="xai-card-container">
+            <div class="xai-header">
+              <h3 id="card-node-title">Node Telemetry: NODE_01</h3>
+              <span class="badge tier-normal" id="card-risk-badge">NORMAL (STABLE)</span>
+            </div>
+
+            <!-- AI Assessment Summary -->
+            <div class="xai-summary-block">
+              <div class="xai-summary-text" id="card-summary-en">
+                NORMAL: Node reporting stable strata conditions with full sensor integrity.
+              </div>
+            </div>
+
+            <!-- Key Physical Evidence Grid -->
+            <div class="telemetry-metrics-grid" id="card-evidence-grid">
+              <div class="metric-card">
+                <div class="metric-header">Tilt Magnitude</div>
+                <div class="metric-value" id="card-val-tilt">0.05 mrad</div>
+                <div class="metric-sub">MPU6050 (±15° range)</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header">Crack Gap</div>
+                <div class="metric-value" id="card-val-crack">5.02 mm</div>
+                <div class="metric-sub">VL53L0X Laser ToF</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header">Microstrain</div>
+                <div class="metric-value" id="card-val-strain">0.8 με</div>
+                <div class="metric-sub">HX711 120Ω Gauge</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-header">Vibration RMS</div>
+                <div class="metric-value" id="card-val-vib">0.005 g</div>
+                <div class="metric-sub">ADXL345 200Hz Nyquist</div>
+              </div>
+            </div>
+
+            <!-- Spatial Consensus Evidence -->
+            <div style="margin-top: 1rem; font-size: 0.8rem; background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+              <div style="font-weight: 600; color: var(--tier-cyan); margin-bottom: 0.25rem;">Spatial Consensus Corroboration:</div>
+              <div id="card-spatial-en" style="color: var(--text-main); line-height: 1.4;">Isolated node observation. No adjacent neighbor movement detected.</div>
+            </div>
+
+            <!-- Project Safety Protocol Box (project-defined limits) -->
+            <div class="action-box">
+              <h5>Project Safety Protocol (Project Standard 112 — project-defined, not a statutory directive):</h5>
+              <div id="card-action-en" style="font-size: 0.8rem; line-height: 1.4;">STANDARD PROTOCOL: Maintain standard 5-minute autonomous LoRa reporting cycle.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 2: TELEMETRY CHARTS ==================== -->
+        <div id="tab-telemetry" class="tab-view" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <h3 style="font-size: 0.9rem;" id="chart-node-label">Live Telemetry: NODE_01</h3>
+            <span class="badge" style="font-family: var(--font-mono);">Sampling: Simulated edge telemetry (labelled SIMULATION)</span>
+          </div>
+
+          <!-- Tilt & Crack Chart Canvas -->
+          <div class="chart-box" style="margin-bottom: 1rem; height: 180px;">
+            <canvas id="chart-deformation"></canvas>
+          </div>
+
+          <!-- Vibration & Strain Chart Canvas -->
+          <div class="chart-box" style="height: 180px;">
+            <canvas id="chart-vibration"></canvas>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 3: MESH NODES LIST ==================== -->
+        <div id="tab-mesh" class="tab-view" style="display: none;">
+          <div id="node-cards-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Node cards injected dynamically -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet GIS JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Chart.js for Live Telemetry -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Dashboard Application Script -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
